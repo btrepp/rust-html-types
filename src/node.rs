@@ -1,6 +1,9 @@
+use crate::attributes;
 use crate::tag::Tag;
 use crate::text::Text;
+use attributes::Attribute;
 use derive_more::{From, Into};
+use std::collections::HashMap;
 ///! A loose representation of the tree structure HTML follows
 ///! This can still be used to generate 'invalid' html.
 ///! Eg a br tag with children would be possible. However most browsers
@@ -12,10 +15,10 @@ use derive_more::{From, Into};
 ///!
 ///! Note: All datastructures here are fairly public, allowing them to be manipulated
 ///! as desired
-use std::collections::HashMap;
 
 type Void = ();
 type Normal<'a> = Vec<Node<'a>>;
+type Attributes<'a> = HashMap<Attribute<'a>, Option<attributes::Value>>;
 
 /// Describes all potential shapes of a html element
 /// Note that there are only three kinds, text nodes, comment nodes, and element nodes
@@ -41,7 +44,7 @@ where
     T: ElementType,
 {
     pub name: Tag<'a>,
-    pub attributes: HashMap<String, String>,
+    pub attributes: Attributes<'a>,
     pub children: T,
 }
 

@@ -4,7 +4,8 @@
 ///! Tree of nodes into html
 ///!
 ///! NOTE: Currently functional, but not pretty-printed
-use crate::{text::Text, node::*};
+use crate::{attributes, node::*, text::Text};
+use attributes::{Attribute, Value};
 use std::collections::HashMap;
 
 impl<'a> From<Node<'a>> for String {
@@ -27,10 +28,18 @@ fn comment_to_string(value: Comment) -> String {
     format!("<!--{}-->", text)
 }
 
-fn attributes_to_string(value: HashMap<String, String>) -> Option<String> {
+fn attributes_to_string<'a>(
+    value: HashMap<attributes::Attribute<'a>, Option<attributes::Value>>,
+) -> Option<String> {
     let seperator = " ";
     let joiner = "=";
-    let property = |(key, value)| -> String { format!("{}{}{}", key, joiner, value) };
+    let property = |arg: (&Attribute, &Option<Value>)| -> String {
+        let (key, value) = arg;
+        match value {
+            None => format!("{}", key),
+            Some(value) => format!("{}{}{}", key, joiner, value),
+        }
+    };
 
     match value.len() {
         0 => None,
@@ -73,6 +82,7 @@ fn element(value: Element<Vec<Node>>) -> String {
 mod tests {
     use super::*;
     use crate::tag::Tag;
+    use attributes::{Attribute, Value};
     #[test]
     fn render_text() {
         let text = Node::text("Hello");
@@ -100,8 +110,8 @@ mod tests {
     #[test]
     fn render_element_void_with_attributes() {
         let mut element = Element::<()>::create(Tag::BR);
-        element.attributes.insert("prop".into(), "value".into());
-        let expected = "<br prop=value />";
+        element.add_attribute(Attribute::CLASS, Value::create("test"));
+        let expected = "<br class=test />";
         let node: Node = element.into();
         let render: String = node.into();
         assert_eq!(render, expected);
@@ -158,12 +168,12 @@ mod tests {
     #[test]
     fn render_element_open_with_attributes() {
         let mut element = Element::<Vec<Node>>::create(Tag::A);
-        element.attributes.insert("prop".into(), "value".into());
+        element.add_attribute(Attribute::CLASS, Value::create("test"));
         let nested: Node = Text::create("Link").into();
         element.push(nested);
         let node: Node = element.into();
         let rendered: String = node.into();
-        let expected = "<a prop=value>Link</a>";
+        let expected = "<a class=test>Link</a>";
         assert_eq!(rendered, expected);
     }
 }

@@ -1,10 +1,12 @@
 ///! Module with some extra constructors using public interfaces
 ///! Not strictly necessary to use, but does eliminate some repetitive tasks
 use crate::{
+    attributes,
     node::{Comment, Element, ElementType, Node},
     tag::Tag,
-    text::Text
+    text::Text,
 };
+use attributes::{Attribute, Value};
 use std::collections::HashMap;
 
 impl<'a> Node<'a> {
@@ -49,5 +51,13 @@ where
             children,
         };
         element
+    }
+
+    pub fn add_bool_attribute(&mut self, key: Attribute<'a>) {
+        self.attributes.insert(key, None);
+    }
+
+    pub fn add_attribute(&mut self, key: Attribute<'a>, value: Value) {
+        self.attributes.insert(key, Some(value));
     }
 }
