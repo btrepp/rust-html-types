@@ -3,7 +3,9 @@ name = "html-types"
 version = "0.1.0"
 authors = ["beau trepp <beautrepp@gmail.com>"]
 edition = "2018"
-
+description = "HTML Data structures"
+license = "MIT"
+repository = "https://github.com/btrepp/rust-html-types"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
