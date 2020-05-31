@@ -1,16 +1,18 @@
 ///! Module with some extra constructors using public interfaces
 ///! Not strictly necessary to use, but does eliminate some repetitive tasks
 
-use crate::{tag::{TagParseError, Tag}, node::{Node, Comment, Text, Element, ElementType}};
+use crate::{tag::{Tag}, node::{Node, Comment, Text, Element, ElementType}};
 use std::collections::HashMap;
 
 impl<'a> Node<'a> {
 
+    /// Creates a comment as a Node from the supplied string
     pub fn comment(text:&str) -> Self {
         let comment :Comment  = text.to_string().into();
         comment.into()
     }
 
+    /// Creates a text element as a node
     pub fn text(text:&str) -> Self {
         let text: Text = text.to_string().into();
         text.into()
@@ -20,6 +22,10 @@ impl<'a> Node<'a> {
 
 
 impl<'a> Element<'a,Vec<Node<'a>>> {
+
+    /// Pushes a child not into the element
+    /// Note: you can also do this yourself, but this is nicer
+    /// as it will coerce anything that can be a node into a node
     pub fn push<N>(&mut self,node: N) -> ()
         where N: Into<Node<'a>>  {
         let node = node.into();
@@ -43,14 +49,6 @@ impl <'a,T> Element<'a,T>
                 children
             };
         element
-    }
-
-    pub fn try_create<S>(name:S) -> Result<Self,TagParseError> 
-        where S : Into<&'a str> {
-        let text = name.into();
-        let tag = Tag::try_create(text)?;
-        let element = Self::create(tag);
-        Ok(element)
     }
 
 }

@@ -1,5 +1,6 @@
 use derive_more::Into;
-/// A html tag definition
+/// A html tag definition. Most of the time you will want the static constants
+/// defined on Tag, rather than constructing this yourself
 #[derive(Into,Clone,Eq, PartialEq)]
 pub struct Tag<'a>(&'a str);
 
