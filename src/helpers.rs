@@ -1,8 +1,9 @@
 ///! Module with some extra constructors using public interfaces
 ///! Not strictly necessary to use, but does eliminate some repetitive tasks
 use crate::{
-    node::{Comment, Element, ElementType, Node, Text},
+    node::{Comment, Element, ElementType, Node},
     tag::Tag,
+    text::Text
 };
 use std::collections::HashMap;
 
@@ -15,7 +16,7 @@ impl<'a> Node<'a> {
 
     /// Creates a text element as a node
     pub fn text(text: &str) -> Self {
-        let text: Text = text.to_string().into();
+        let text: Text = Text::create(text);
         text.into()
     }
 }

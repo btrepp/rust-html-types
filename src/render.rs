@@ -4,7 +4,7 @@
 ///! Tree of nodes into html
 ///!
 ///! NOTE: Currently functional, but not pretty-printed
-use crate::node::*;
+use crate::{text::Text, node::*};
 use std::collections::HashMap;
 
 impl<'a> From<Node<'a>> for String {
@@ -110,7 +110,7 @@ mod tests {
     #[test]
     fn render_element_open() {
         let mut element = Element::<Vec<Node>>::create(Tag::A);
-        let nested: Node = Node::Text("Link".to_string().into());
+        let nested: Node = Text::create("Link").into();
         element.push(nested);
         let node: Node = element.into();
         let rendered: String = node.into();
@@ -159,7 +159,7 @@ mod tests {
     fn render_element_open_with_attributes() {
         let mut element = Element::<Vec<Node>>::create(Tag::A);
         element.attributes.insert("prop".into(), "value".into());
-        let nested: Node = Node::Text("Link".to_string().into());
+        let nested: Node = Text::create("Link").into();
         element.push(nested);
         let node: Node = element.into();
         let rendered: String = node.into();

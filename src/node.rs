@@ -1,4 +1,5 @@
 use crate::tag::Tag;
+use crate::text::Text;
 use derive_more::{From, Into};
 ///! A loose representation of the tree structure HTML follows
 ///! This can still be used to generate 'invalid' html.
@@ -26,10 +27,6 @@ pub enum Node<'a> {
     Element(Element<'a, Normal<'a>>),
     Void(Element<'a, Void>),
 }
-
-/// The HTML text node. This is used inside tags eg <p>Text</p>
-#[derive(From, Into, Clone)]
-pub struct Text(String);
 
 /// A Html comment node. <!---- Text --->
 #[derive(From, Into, Clone)]
