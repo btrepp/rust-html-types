@@ -3,7 +3,6 @@ use derive_more::Into;
 #[derive(Into, Clone,PartialEq,Eq,Debug)]
 pub struct Text(String);
 
-pub struct InvalidTextError();
 impl Text {
 
     /// Creates a text node. Note: will escape html markup eg <,>,&
