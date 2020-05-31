@@ -26,7 +26,7 @@ to other data types if necessary, though a string rendering module is included.
 
 # TODO
 
-1. Currently tags need more types fleshed out (eg the compile time constants)
+1. ~~Currently tags need more types fleshed out (eg the compile time constants)~~
 2. Pretty printing string rendering
 3. Semantic HTML models, eg another tree saying ol must only have li elements etc.
    Which would lead to not just the correct shape, but the correct intent
