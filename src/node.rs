@@ -1,3 +1,5 @@
+use crate::tag::Tag;
+use derive_more::{From, Into};
 ///! A loose representation of the tree structure HTML follows
 ///! This can still be used to generate 'invalid' html.
 ///! Eg a br tag with children would be possible. However most browsers
@@ -8,10 +10,8 @@
 ///! Of traits allowing further 'custom' types. It is more Data driven in it's approach
 ///!
 ///! Note: All datastructures here are fairly public, allowing them to be manipulated
-///! as desired 
+///! as desired
 use std::collections::HashMap;
-use derive_more::{From,Into};
-use crate::tag::{Tag};
 
 type Void = ();
 type Normal<'a> = Vec<Node<'a>>;
@@ -19,37 +19,39 @@ type Normal<'a> = Vec<Node<'a>>;
 /// Describes all potential shapes of a html element
 /// Note that there are only three kinds, text nodes, comment nodes, and element nodes
 /// but an element node can be void, or have children
-#[derive(Clone,From)]
+#[derive(Clone, From)]
 pub enum Node<'a> {
     Text(Text),
     Comment(Comment),
-    Element(Element<'a,Normal<'a>>),
-    Void(Element<'a,Void>)
+    Element(Element<'a, Normal<'a>>),
+    Void(Element<'a, Void>),
 }
 
 /// The HTML text node. This is used inside tags eg <p>Text</p>
-#[derive(From,Into,Clone)]
+#[derive(From, Into, Clone)]
 pub struct Text(String);
 
 /// A Html comment node. <!---- Text --->
-#[derive(From,Into,Clone)]
+#[derive(From, Into, Clone)]
 pub struct Comment(String);
 
 /// The html element type. This is the most common
 /// Note: if children is None, then it is handled as an empty
 /// element, this is different than having no children
 #[derive(Clone)]
-pub struct Element<'a,T>
-    where T: ElementType {
+pub struct Element<'a, T>
+where
+    T: ElementType,
+{
     pub name: Tag<'a>,
-    pub attributes: HashMap<String,String>,
-    pub children: T
+    pub attributes: HashMap<String, String>,
+    pub children: T,
 }
 
 /// Represents the different element types.
 /// Note: This is sealed so cannot be implemented other this crate
 /// Implementations
-pub trait ElementType: private::Sealed + Default{ }
+pub trait ElementType: private::Sealed + Default {}
 
 mod private {
     impl super::ElementType for super::Void {}

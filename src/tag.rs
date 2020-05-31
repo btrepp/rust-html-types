@@ -1,7 +1,7 @@
 use derive_more::Into;
 /// A html tag definition. Most of the time you will want the static constants
 /// defined on Tag, rather than constructing this yourself
-#[derive(Into,Clone,Eq, PartialEq)]
+#[derive(Into, Clone, Eq, PartialEq)]
 pub struct Tag<'a>(&'a str);
 
 /// Returned when the tag didn't contain valid characters
@@ -9,24 +9,23 @@ pub struct TagParseError();
 
 macro_rules! tag {
     ($name:ident $tag:ident) => {
-        pub const $name : Tag<'static> = Tag(stringify!($tag));
+        pub const $name: Tag<'static> = Tag(stringify!($tag));
     };
 }
 
 impl<'a> Tag<'a> {
-
     /// Try to create the tag from a string
     /// Note this will currently fail if the tag is not alphabetic
     ///
     /// Prefer to use the contant forms if possible. However HTML can have custom
     /// tags, so we do need this possibility
-    pub fn try_create<S>(text:S) -> Result<Self,TagParseError> 
-        where S: Into<&'a str> {
+    pub fn try_create<S>(text: S) -> Result<Self, TagParseError>
+    where
+        S: Into<&'a str>,
+    {
         let string = text.into();
         match string.chars().all(char::is_alphabetic) {
-            false => {
-                Err(TagParseError())
-            },
+            false => Err(TagParseError()),
             true => {
                 let tag = Tag(string);
                 Ok(tag)
@@ -36,11 +35,10 @@ impl<'a> Tag<'a> {
 }
 
 impl Tag<'static> {
-
     /// Escape hatch for creating a tag in an external crate.
     /// NOTE: we can't verify correctness here, so take care
     /// (hence why it's marked as unsafe)
-    pub const unsafe fn create_unsafe(tag:&'static str) -> Tag {
+    pub const unsafe fn create_unsafe(tag: &'static str) -> Tag {
         Tag(tag)
     }
 
@@ -158,5 +156,4 @@ impl Tag<'static> {
     tag!(VAR var);
     tag!(VIDEO video);
     tag!(WBR wbr);
-     
 }
