@@ -11,15 +11,20 @@
 ///! as desired 
 use std::collections::HashMap;
 use derive_more::{From,Into};
+use crate::tag::{Tag};
+
+type Void = ();
+type Normal<'a> = Vec<Node<'a>>;
 
 /// Describes all potential shapes of a html element
 /// Note that there are only three kinds, text nodes, comment nodes, and element nodes
-#[derive(Clone)]
-pub enum Node {
+/// but an element node can be void, or have children
+#[derive(Clone,From)]
+pub enum Node<'a> {
     Text(Text),
     Comment(Comment),
-    Element(Element<Normal>),
-    Void(Element<Void>)
+    Element(Element<'a,Normal<'a>>),
+    Void(Element<'a,Void>)
 }
 
 /// The HTML text node. This is used inside tags eg <p>Text</p>
@@ -30,127 +35,26 @@ pub struct Text(String);
 #[derive(From,Into,Clone)]
 pub struct Comment(String);
 
-pub trait ElementType: private::Sealed { }
-
-#[derive(Clone)]
-pub struct Void();
-#[derive(From,Into,Clone)]
-pub struct Normal(Vec<Node>);
-
-impl ElementType for Void {}
-impl ElementType for Normal {}
-
-mod private {
-    pub trait Sealed {}
-    impl Sealed for super::Void {}
-    impl Sealed for super::Normal {}
-}
-
 /// The html element type. This is the most common
 /// Note: if children is None, then it is handled as an empty
 /// element, this is different than having no children
 #[derive(Clone)]
-pub struct Element<T>
+pub struct Element<'a,T>
     where T: ElementType {
-    pub name: String,
+    pub name: Tag<'a>,
     pub attributes: HashMap<String,String>,
     pub children: T
 }
 
-impl Element<Normal> {
+/// Represents the different element types.
+/// Note: This is sealed so cannot be implemented other this crate
+/// Implementations
+pub trait ElementType: private::Sealed + Default{ }
 
-    /// Creates a typical element with children, from the
-    /// provided tag name. This is the typical case
-    pub fn create(name:String) -> Self {
-        let attributes = HashMap::default();
-        let children = Vec::default().into();
-        Element {
-            name,
-            attributes,
-            children
-        }
-    }
-
-    pub fn push(&mut self,node: Node) {
-        self.children.0.push(node);        
-    }
-}
-
-impl Element<Void> {
-    /// Creates an empty element. Children are None
-    /// Tag would be closed when rendered
-    pub fn new(name:String) -> Self {
-        let attributes = HashMap::default();
-        let children = Void {};
-        Element {
-            name, 
-            children,
-            attributes
-        }
-    }
-}
-
-
-mod render {
-    use super::{Text,Comment,Element,Normal};
-    trait RenderHtml {
-        fn to_html(self) -> String;
-    }
-    
-    impl RenderHtml for Text {
-        fn to_html(self) -> String {
-            self.into()            
-        }
-    }
-
-    impl RenderHtml for Comment {
-        fn to_html(self) -> String {
-            let text :String = self.into();
-            let str = format!("<!--{}-->",text);
-            str
-        }
-    }
-
-    impl RenderHtml for Element<Normal> {   
-        fn to_html(self) -> String {
-            "Hello".to_string()
-        }
-
-    }
-  
-    #[cfg(test)]
-    mod tests {
-        use super::*;
-        use super::super::*;
-        #[test]
-        fn render_text() {
-            let text :String = "Hello".into();
-            let text : Text = text.into();
-            let rendered = text.to_html();
-            let expected = "Hello";
-            assert_eq!(rendered,expected);
-        }
-        
-        #[test]
-        fn render_comment() {
-            let text :String = "Hello".into();
-            let text :Comment = text.into();
-            let rendered = text.to_html();
-            let expected = "<!--Hello-->";
-            assert_eq!(rendered,expected);
-        }
-
-        #[test]
-        fn render_element_open() {
-            let mut element = Element::<Normal>::create("a".to_string());
-            let nested : Node= Node::Text("Link".to_string().into());
-            element.push(nested);
-            let rendered = element.to_html();
-            let expected = "<a>Link</a>";
-            assert_eq!(rendered,expected);
-        }
-
-
-    }
-
+mod private {
+    impl super::ElementType for super::Void {}
+    impl<'a> super::ElementType for super::Normal<'a> {}
+    pub trait Sealed {}
+    impl Sealed for () {}
+    impl<'a> Sealed for Vec<super::Node<'a>> {}
 }
