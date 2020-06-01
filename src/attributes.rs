@@ -4,14 +4,23 @@ pub struct Attribute<'a>(&'a str);
 #[derive(Clone, Debug, PartialEq, Eq, Display)]
 pub struct Value(String);
 
+pub struct InvalidKeyError {}
+
+#[derive(Debug)]
+pub struct InvalidValueError {}
+
 impl Value {
-    pub fn create<S>(str: S) -> Value
+    pub fn create<S>(str: S) -> Result<Value,InvalidValueError>
     where
         S: Into<String>,
     {
         let string: String = str.into();
-        Value(string)
+        match string.chars().all(char::is_alphabetic) {
+            true => Ok(Value(string)),
+            false => Err (InvalidValueError{})
+        }
     }
+
 }
 
 macro_rules! key {
@@ -19,7 +28,7 @@ macro_rules! key {
         pub const $name: Attribute<'static> = Attribute($tag);
     };
 }
-pub struct InvalidKeyError {}
+
 impl<'a> Attribute<'a> {
     /// Try to create a key from a string reference
     pub fn create(attribute: &'a str) -> Result<Attribute<'a>, InvalidKeyError> {
