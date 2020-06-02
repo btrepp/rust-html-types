@@ -1,27 +1,10 @@
+mod value;
 use derive_more::Display;
+pub use value::Value;
 #[derive(Clone, Debug, Copy, PartialEq, Eq, Ord, PartialOrd, Display, Hash)]
 pub struct Attribute<'a>(&'a str);
-#[derive(Clone, Debug, PartialEq, Eq, Display)]
-pub struct Value(String);
 
 pub struct InvalidKeyError {}
-
-#[derive(Debug)]
-pub struct InvalidValueError {}
-
-impl Value {
-    pub fn create<S>(str: S) -> Result<Value,InvalidValueError>
-    where
-        S: Into<String>,
-    {
-        let string: String = str.into();
-        match string.chars().all(char::is_alphabetic) {
-            true => Ok(Value(string)),
-            false => Err (InvalidValueError{})
-        }
-    }
-
-}
 
 macro_rules! key {
     ($name:ident $tag:expr) => {

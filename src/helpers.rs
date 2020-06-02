@@ -57,7 +57,7 @@ where
         self.attributes.insert(key, None);
     }
 
-    pub fn add_attribute(&mut self, key: Attribute<'a>, value: Value) {
+    pub fn add_attribute(&mut self, key: Attribute<'a>, value: Value<'a>) {
         self.attributes.insert(key, Some(value));
     }
 }
