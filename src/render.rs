@@ -37,7 +37,7 @@ fn attributes_to_string<'a>(
         let (key, value) = arg;
         match value {
             None => format!("{}", key),
-            Some(value) => format!("{}{}{}", key, joiner, value),
+            Some(value) => format!("{}{}\"{}\"", key, joiner, value),
         }
     };
 
@@ -111,7 +111,7 @@ mod tests {
     fn render_element_void_with_attributes() {
         let mut element = Element::<()>::create(Tag::BR);
         element.add_attribute(Attribute::CLASS, Value::create("test").unwrap());
-        let expected = "<br class=test />";
+        let expected = r#"<br class="test" />"#;
         let node: Node = element.into();
         let render: String = node.into();
         assert_eq!(render, expected);
@@ -173,7 +173,7 @@ mod tests {
         element.push(nested);
         let node: Node = element.into();
         let rendered: String = node.into();
-        let expected = "<a class=test>Link</a>";
+        let expected = r#"<a class="test">Link</a>"#;
         assert_eq!(rendered, expected);
     }
 }

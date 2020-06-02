@@ -1,6 +1,6 @@
 use derive_more::Display;
 
-#[derive(Debug)]
+#[derive(Debug,PartialEq,Eq)]
 pub struct InvalidValueError {}
 
 #[derive(Clone, Debug, PartialEq, Eq, Display)]
@@ -16,7 +16,13 @@ macro_rules! value {
 impl<'a> Value<'a> {
     pub fn create(str: &'a str) -> Result<Value<'a>,InvalidValueError>
     {
-        match str.chars().all(char::is_alphabetic) {
+        let allowed = |c:char| -> bool {
+            char::is_alphabetic(c)
+            || c == ':'
+            || c == '/'
+            || c == '.'
+        };
+        match str.chars().all(allowed) {
             true => Ok(Value(str)),
             false => Err (InvalidValueError{})
         }
@@ -29,4 +35,17 @@ impl<'a> Value<'a> {
     value!(STYLESHEET "stylesheet");
     value!(UTF_8 "UTF-8");    
 
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn url_is_valid() {
+        let url = "http://google.com";
+        let node = Value::create(url);
+        let expected = Result::Ok(Value(url));
+        assert_eq!(node, expected);
+    }
 }

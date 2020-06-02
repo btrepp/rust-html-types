@@ -21,6 +21,8 @@ impl<'a> Node<'a> {
         let text: Text = Text::create(text);
         text.into()
     }
+
+
 }
 
 impl<'a> Element<'a, Vec<Node<'a>>> {
@@ -33,6 +35,43 @@ impl<'a> Element<'a, Vec<Node<'a>>> {
     {
         let node = node.into();
         self.children.push(node);
+    }
+
+    /// Helper function to create a link
+    /// given the label and url
+    pub fn anchor(url: Value<'a>, label: Text) -> Self {
+        // Note: in future URL should be more strongly typed?
+        let mut element = Element::<Vec<Node>>::create(Tag::A);
+        element.add_attribute(Attribute::HREF, url);
+        element.push(label);
+        element.into()
+    }
+
+    /// Creates a body element. Note consumes the children vector
+    pub fn body<N> (children:Vec<N>) -> Self 
+        where N : Into<Node<'a>> {
+        let mut el = Element::<Vec<Node>>::create(Tag::BODY);
+        for child in children{
+            el.push(child);
+        }
+        el
+    }
+
+    /// Creates the html element
+    /// Helper here assumes you have a body and header.
+    /// as thats's used pretty much always
+    pub fn html(header:Element<'a,Vec<Node<'a>>>, body:Element<'a,Vec<Node<'a>>>) -> Self {
+        let mut el = Element::<Vec<Node>>::create(Tag::HTML);
+        el.push(header);
+        el.push(body);
+        el
+    }
+
+    /// Creates a html title, with the supplied text
+    pub fn title(title:Text) -> Self {
+        let mut el = Element::<Vec<Node>>::create(Tag::TITLE);
+        el.push(title);
+        el
     }
 }
 
