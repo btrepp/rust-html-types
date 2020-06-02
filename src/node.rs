@@ -18,7 +18,7 @@ use std::collections::HashMap;
 
 type Void = ();
 type Normal<'a> = Vec<Node<'a>>;
-type Attributes<'a> = HashMap<Attribute<'a>, Option<attributes::Value>>;
+type Attributes<'a> = HashMap<Attribute<'a>, Option<attributes::Value<'a>>>;
 
 /// Describes all potential shapes of a html element
 /// Note that there are only three kinds, text nodes, comment nodes, and element nodes
