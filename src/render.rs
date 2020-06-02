@@ -110,7 +110,7 @@ mod tests {
     #[test]
     fn render_element_void_with_attributes() {
         let mut element = Element::<()>::create(Tag::BR);
-        element.add_attribute(Attribute::CLASS, Value::create("test").unwrap());
+        element.set_attribute(Attribute::CLASS, Value::create("test").unwrap());
         let expected = r#"<br class="test" />"#;
         let node: Node = element.into();
         let render: String = node.into();
@@ -168,7 +168,7 @@ mod tests {
     #[test]
     fn render_element_open_with_attributes() {
         let mut element = Element::<Vec<Node>>::create(Tag::A);
-        element.add_attribute(Attribute::CLASS, Value::create("test").unwrap());
+        element.set_attribute(Attribute::CLASS, Value::create("test").unwrap());
         let nested: Node = Text::create("Link").into();
         element.push(nested);
         let node: Node = element.into();

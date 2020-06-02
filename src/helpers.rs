@@ -42,7 +42,7 @@ impl<'a> Element<'a, Vec<Node<'a>>> {
     pub fn anchor(url: Value<'a>, label: Text) -> Self {
         // Note: in future URL should be more strongly typed?
         let mut element = Element::<Vec<Node>>::create(Tag::A);
-        element.add_attribute(Attribute::HREF, url);
+        element.set_attribute(Attribute::HREF, url);
         element.push(label);
         element.into()
     }
@@ -92,11 +92,16 @@ where
         element
     }
 
-    pub fn add_bool_attribute(&mut self, key: Attribute<'a>) {
+    /// Sets the supplied attribute as a 'boolean' attribute
+    /// This means it will just appear in the html, and will not render
+    /// with a =value eg <div editable></div>
+    pub fn set_bool_attribute(&mut self, key: Attribute<'a>) {
         self.attributes.insert(key, None);
     }
 
-    pub fn add_attribute(&mut self, key: Attribute<'a>, value: Value<'a>) {
+    /// Sets the attribute to the supplied value
+    /// Note: sugar over wrapping the value with some.
+    pub fn set_attribute(&mut self, key: Attribute<'a>, value: Value<'a>) {
         self.attributes.insert(key, Some(value));
     }
 }
