@@ -1,14 +1,15 @@
 use derive_more::Display;
+use std::borrow::Cow;
 
 #[derive(Debug,PartialEq,Eq)]
 pub struct InvalidValueError {}
 
 #[derive(Clone, Debug, PartialEq, Eq, Display)]
-pub struct Value<'a>(&'a str);
+pub struct Value<'a>(Cow<'a,str>);
 
 macro_rules! value {
     ($name:ident $tag:expr) => {
-        pub const $name: Value<'static> = Value($tag);
+        pub const $name: Value<'static> = Value(Cow::Borrowed($tag));
     };
 }
 
@@ -23,7 +24,20 @@ impl<'a> Value<'a> {
             || c == '.'
         };
         match str.chars().all(allowed) {
-            true => Ok(Value(str)),
+            true => Ok(Value(Cow::Borrowed(str))),
+            false => Err (InvalidValueError{})
+        }
+    }
+
+    pub fn owned(str:String) -> Result<Value<'a>,InvalidValueError> {
+        let allowed = |c:char| -> bool {
+            char::is_alphabetic(c)
+            || c == ':'
+            || c == '/'
+            || c == '.'
+        };
+        match str.chars().all(allowed) {
+            true => Ok(Value(Cow::Owned(str))),
             false => Err (InvalidValueError{})
         }
     }
@@ -45,7 +59,7 @@ mod tests {
     fn url_is_valid() {
         let url = "http://google.com";
         let node = Value::create(url);
-        let expected = Result::Ok(Value(url));
+        let expected = Result::Ok(Value(Cow::Borrowed(url)));
         assert_eq!(node, expected);
     }
 }

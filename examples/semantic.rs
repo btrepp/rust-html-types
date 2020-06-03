@@ -1,6 +1,6 @@
-use html_types::semantic::{Head,Html,Body };
+use html_types::semantic::{Head,Html,Body,Script };
 use html_types::node::Node;
-use html_types::text::Text;
+use html_types::{url::Url, text::Text};
 
 // This shows the semantic module of
 // The semantic module is trying to provide strongly typed models of the html data structure
@@ -13,7 +13,9 @@ use html_types::text::Text;
 fn main() {
     let title = Some(Text::create("Title"));
     let styles = vec![];
-    let scripts = vec![];
+    let url = Url::absolute_unchecked("http://google.com".into());
+    let script = Script::External(url);
+    let scripts = vec![script];
     let head = Head { title, styles, scripts };
     let content = Text::create("Hello");
     let body = Body { content, scripts : vec![]};
