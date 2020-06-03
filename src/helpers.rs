@@ -4,7 +4,7 @@ use crate::{
     attributes,
     node::{Comment, Element, ElementType, Node},
     tag::Tag,
-    text::Text,
+    text::Text, url::Url,
 };
 use attributes::{Attribute, Value};
 use std::collections::HashMap;
@@ -23,6 +23,26 @@ impl<'a> Node<'a> {
     }
 
 
+}
+
+impl<'a> Element<'a,()> {
+
+    /// An external script tag
+    pub fn external_script(url:Url) -> Self {
+        let mut el = Element::<()>::create(Tag::SCRIPT);
+        let url: Value<'a> = url.into();
+        el.set_attribute(Attribute::SRC, url);
+        el
+    }
+
+    /// An external stylesheet (link tag)
+    pub fn external_style(url:Url) -> Self {
+        let mut el = Element::<()>::create(Tag::LINK);
+        let url: Value<'a> = url.into();
+        el.set_attribute(Attribute::REL, Value::STYLESHEET);
+        el.set_attribute(Attribute::HREF, url);
+        el
+    }
 }
 
 impl<'a> Element<'a, Vec<Node<'a>>> {
@@ -73,6 +93,26 @@ impl<'a> Element<'a, Vec<Node<'a>>> {
         el.push(title);
         el
     }
+
+    /// Creates an inline script in to be used in the head section
+    pub fn inline_script(text:Text) -> Self {
+        let mut el = Element::<Vec<Node>>::create(Tag::SCRIPT);
+        el.push(text);
+        el
+    }
+
+    /// Creates an inline script in to be used in the head section
+    pub fn inline_style(text:Text) -> Self {
+        let mut el = Element::<Vec<Node>>::create(Tag::STYLE);
+        el.push(text);
+        el
+    }
+
+    /// Creates the head section of a document
+    pub fn head() -> Self {
+        Element::<Vec<Node>>::create(Tag::HEAD)
+    }
+
 }
 
 impl<'a, T> Element<'a, T>
