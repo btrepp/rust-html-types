@@ -1,6 +1,6 @@
 
 
-use super::{Body, Html, Head, Script, StyleSheet};
+use super::{Body, Html, Head, Script, StyleSheet, BodyElement, Document};
 use crate::{ node::{Element, Node}, text::Text};
 
 impl<'a> From<Script> for Node<'a> {
@@ -36,9 +36,14 @@ impl<'a> From<StyleSheet> for Node<'a> {
 
 impl<'a> From<Body> for Element<'a,Vec<Node<'a>>> {
     fn from(value: Body) -> Self {
-        let content:Node = value.content.into();
-        let mut body: Element<Vec<Node>> = Element::body(vec![content]);
-                      
+        let empty : Vec<Node> = vec![];
+        let mut body: Element<Vec<Node>> = Element::body(empty);
+        
+        for item in value.content {
+            let el: Node = item.into();
+            body.push(el);
+        }
+
         for script in value.scripts {
             let el: Node = script.into();
             body.push(el);
@@ -70,14 +75,26 @@ impl<'a> From<Head> for Element<'a,Vec<Node<'a>>> {
 
         head
     }
-
 }
 
+impl<'a> From<BodyElement> for Node<'a> {
+    fn from(value: BodyElement) -> Self {
+        match value {
+            BodyElement::Text(text) => text.into()
+        }
+    }
+}
+
+impl<'a> From<Text> for BodyElement {
+    fn from(value: Text) -> Self {
+        BodyElement::Text(value)
+    }
+}
 impl<'a> From<Html> for Element<'a,Vec<Node<'a>>>{
     fn from(value: Html) -> Self {
         let header: Element<Vec<Node<'a>>> = value.head.into();
         let body: Self = value.body.into();
-        Element::html(header, body)
+        Element::html(value.lang,header, body)
     }
 
 }
@@ -86,6 +103,14 @@ impl<'a> From<Html> for Node<'a> {
     fn from(html: Html) -> Self {
         let el : Element<Vec<Node<'a>>> = html.into();
         el.into()
+    }
+}
+
+impl<'a> From<Document> for String {
+    fn from(value: Document) -> Self {
+        let node : Node<'a> = value.html.into();
+        let text : String = node.into();
+        format!("<!DOCTYPE html>{}",text)
     }
 
 }

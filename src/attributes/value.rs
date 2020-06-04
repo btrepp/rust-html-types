@@ -48,6 +48,7 @@ impl<'a> Value<'a> {
     value!(TEXT_CSS "text/css");
     value!(STYLESHEET "stylesheet");
     value!(UTF_8 "UTF-8");    
+    value!(EN "en");
 
 }
 

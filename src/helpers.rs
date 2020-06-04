@@ -27,13 +27,6 @@ impl<'a> Node<'a> {
 
 impl<'a> Element<'a,()> {
 
-    /// An external script tag
-    pub fn external_script(url:Url) -> Self {
-        let mut el = Element::<()>::create(Tag::SCRIPT);
-        let url: Value<'a> = url.into();
-        el.set_attribute(Attribute::SRC, url);
-        el
-    }
 
     /// An external stylesheet (link tag)
     pub fn external_style(url:Url) -> Self {
@@ -80,8 +73,9 @@ impl<'a> Element<'a, Vec<Node<'a>>> {
     /// Creates the html element
     /// Helper here assumes you have a body and header.
     /// as thats's used pretty much always
-    pub fn html(header:Element<'a,Vec<Node<'a>>>, body:Element<'a,Vec<Node<'a>>>) -> Self {
+    pub fn html(lang :Value<'a>, header:Element<'a,Vec<Node<'a>>>, body:Element<'a,Vec<Node<'a>>>) -> Self {
         let mut el = Element::<Vec<Node>>::create(Tag::HTML);
+        el.set_attribute(Attribute::LANG,lang);
         el.push(header);
         el.push(body);
         el
@@ -100,6 +94,15 @@ impl<'a> Element<'a, Vec<Node<'a>>> {
         el.push(text);
         el
     }
+
+    /// An external script tag
+    pub fn external_script(url:Url) -> Self {
+        let mut el = Element::<Vec<Node>>::create(Tag::SCRIPT);
+        let url: Value<'a> = url.into();
+        el.set_attribute(Attribute::SRC, url);
+        el
+    }
+    
 
     /// Creates an inline script in to be used in the head section
     pub fn inline_style(text:Text) -> Self {

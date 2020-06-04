@@ -8,10 +8,8 @@ mod to_element;
 ///! of html
 
 use crate::text::Text;
-use crate::url::Url;
+use crate::{css::CascadingStyleSheet, url::Url, javascript::Javascript, attributes::Value};
 
-pub struct Javascript(String);
-pub struct CascadingStyleSheet(String);
 
 pub enum StyleSheet {
     External(Url),
@@ -30,37 +28,20 @@ pub struct Head {
 }
 
 pub struct Html {
+    pub lang: Value<'static>,
     pub head: Head,
     pub body: Body
 }
 
+pub struct Document {
+    pub html: Html
+}
+
 pub struct Body {
-    pub content: Text,
+    pub content: Vec<BodyElement>,
     pub scripts: Vec<Script>
 }
 
-impl Javascript {
-    pub fn create(text:String) -> Self {
-        Javascript(text)
-    }
-}
-
-impl CascadingStyleSheet {
-    pub fn create(text:String) -> Self {
-        CascadingStyleSheet(text)
-    }
-}
-
-impl From<Javascript> for String {
-    fn from(value: Javascript) -> Self {
-        value.0
-    }
-
-}
-
-impl From<CascadingStyleSheet> for String {
-    fn from(value: CascadingStyleSheet) -> Self {
-        value.0
-    }
-
+pub enum BodyElement {
+    Text(Text)
 }

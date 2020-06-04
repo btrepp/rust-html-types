@@ -26,7 +26,7 @@ fn main() {
         el.push(title);
         el
     };
-    let html = Element::html(header,body);
+    let html = Element::html(Value::EN,header,body);
 
     // Convert an element into a node
     let node :Node = html.into();
