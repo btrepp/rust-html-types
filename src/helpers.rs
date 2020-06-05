@@ -116,6 +116,11 @@ impl<'a> Element<'a, Vec<Node<'a>>> {
         Element::<Vec<Node>>::create(Tag::HEAD)
     }
 
+    /// Creats a main, used to hold bulk of page
+    pub fn main() -> Self {
+        Element::<Vec<Node>>::create(Tag::MAIN)
+    }
+
 }
 
 impl<'a, T> Element<'a, T>

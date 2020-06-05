@@ -17,7 +17,7 @@ fn main() {
     let scripts = vec![script];
     let head = Head { title, styles, scripts };
     let content = vec![Text::create("Hello").into()];
-    let body = Body { content, scripts : vec![]};
+    let body = Body { content, scripts : vec![], id: None, class: vec![] };
     let html = Html { head , body , lang: Value::EN };
     let doc = Document { html};
     let string : String = doc.into();

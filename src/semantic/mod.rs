@@ -1,4 +1,10 @@
 mod to_element;
+mod body;
+mod id;
+mod class;
+mod main;
+
+pub use body::*;
 
 ///! Experimental
 ///! Attempts to provide defined structure
@@ -35,13 +41,4 @@ pub struct Html {
 
 pub struct Document {
     pub html: Html
-}
-
-pub struct Body {
-    pub content: Vec<BodyElement>,
-    pub scripts: Vec<Script>
-}
-
-pub enum BodyElement {
-    Text(Text)
 }

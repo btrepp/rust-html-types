@@ -1,6 +1,6 @@
 
 
-use super::{Body, Html, Head, Script, StyleSheet, BodyElement, Document};
+use super::{Body, Html, Head, Script, StyleSheet, BodyElement, Document, main::Main};
 use crate::{ node::{Element, Node}, text::Text};
 
 impl<'a> From<Script> for Node<'a> {
@@ -80,8 +80,16 @@ impl<'a> From<Head> for Element<'a,Vec<Node<'a>>> {
 impl<'a> From<BodyElement> for Node<'a> {
     fn from(value: BodyElement) -> Self {
         match value {
-            BodyElement::Text(text) => text.into()
+            BodyElement::Text(text) => text.into(),
+            BodyElement::Main(main) => main.into()
         }
+    }
+}
+
+impl<'a> From<Main> for Node<'a> {
+    fn from(_value: Main) -> Self {
+        let el = Element::main();
+        el.into()
     }
 }
 
@@ -90,6 +98,7 @@ impl<'a> From<Text> for BodyElement {
         BodyElement::Text(value)
     }
 }
+
 impl<'a> From<Html> for Element<'a,Vec<Node<'a>>>{
     fn from(value: Html) -> Self {
         let header: Element<Vec<Node<'a>>> = value.head.into();
