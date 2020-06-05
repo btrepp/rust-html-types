@@ -4,7 +4,8 @@ use crate::{
     attributes,
     node::{Comment, Element, ElementType, Node},
     tag::Tag,
-    text::Text, url::Url,
+    text::Text,
+    url::Url,
 };
 use attributes::{Attribute, Value};
 use std::collections::HashMap;
@@ -21,15 +22,11 @@ impl<'a> Node<'a> {
         let text: Text = Text::create(text);
         text.into()
     }
-
-
 }
 
-impl<'a> Element<'a,()> {
-
-
+impl<'a> Element<'a, ()> {
     /// An external stylesheet (link tag)
-    pub fn external_style(url:Url) -> Self {
+    pub fn external_style(url: Url) -> Self {
         let mut el = Element::<()>::create(Tag::LINK);
         let url: Value<'a> = url.into();
         el.set_attribute(Attribute::REL, Value::STYLESHEET);
@@ -61,10 +58,12 @@ impl<'a> Element<'a, Vec<Node<'a>>> {
     }
 
     /// Creates a body element. Note consumes the children vector
-    pub fn body<N> (children:Vec<N>) -> Self 
-        where N : Into<Node<'a>> {
+    pub fn body<N>(children: Vec<N>) -> Self
+    where
+        N: Into<Node<'a>>,
+    {
         let mut el = Element::<Vec<Node>>::create(Tag::BODY);
-        for child in children{
+        for child in children {
             el.push(child);
         }
         el
@@ -73,39 +72,42 @@ impl<'a> Element<'a, Vec<Node<'a>>> {
     /// Creates the html element
     /// Helper here assumes you have a body and header.
     /// as thats's used pretty much always
-    pub fn html(lang :Value<'a>, header:Element<'a,Vec<Node<'a>>>, body:Element<'a,Vec<Node<'a>>>) -> Self {
+    pub fn html(
+        lang: Value<'a>,
+        header: Element<'a, Vec<Node<'a>>>,
+        body: Element<'a, Vec<Node<'a>>>,
+    ) -> Self {
         let mut el = Element::<Vec<Node>>::create(Tag::HTML);
-        el.set_attribute(Attribute::LANG,lang);
+        el.set_attribute(Attribute::LANG, lang);
         el.push(header);
         el.push(body);
         el
     }
 
     /// Creates a html title, with the supplied text
-    pub fn title(title:Text) -> Self {
+    pub fn title(title: Text) -> Self {
         let mut el = Element::<Vec<Node>>::create(Tag::TITLE);
         el.push(title);
         el
     }
 
     /// Creates an inline script in to be used in the head section
-    pub fn inline_script(text:Text) -> Self {
+    pub fn inline_script(text: Text) -> Self {
         let mut el = Element::<Vec<Node>>::create(Tag::SCRIPT);
         el.push(text);
         el
     }
 
     /// An external script tag
-    pub fn external_script(url:Url) -> Self {
+    pub fn external_script(url: Url) -> Self {
         let mut el = Element::<Vec<Node>>::create(Tag::SCRIPT);
         let url: Value<'a> = url.into();
         el.set_attribute(Attribute::SRC, url);
         el
     }
-    
 
     /// Creates an inline script in to be used in the head section
-    pub fn inline_style(text:Text) -> Self {
+    pub fn inline_style(text: Text) -> Self {
         let mut el = Element::<Vec<Node>>::create(Tag::STYLE);
         el.push(text);
         el
@@ -120,7 +122,6 @@ impl<'a> Element<'a, Vec<Node<'a>>> {
     pub fn main() -> Self {
         Element::<Vec<Node>>::create(Tag::MAIN)
     }
-
 }
 
 impl<'a, T> Element<'a, T>

@@ -1,3 +1,1 @@
-pub struct Main {
-    
-}
+pub struct Main {}

@@ -1,8 +1,8 @@
-mod to_element;
 mod body;
-mod id;
 mod class;
+mod id;
 mod main;
+mod to_element;
 
 pub use body::*;
 
@@ -12,33 +12,31 @@ pub use body::*;
 ///!
 ///! This probably doesn't cover all 'correct' cases
 ///! of html
-
 use crate::text::Text;
-use crate::{css::CascadingStyleSheet, url::Url, javascript::Javascript, attributes::Value};
-
+use crate::{attributes::Value, css::CascadingStyleSheet, javascript::Javascript, url::Url};
 
 pub enum StyleSheet {
     External(Url),
-    Inline(CascadingStyleSheet)
+    Inline(CascadingStyleSheet),
 }
 
-pub enum Script{
+pub enum Script {
     External(Url),
-    Inline(Javascript)
+    Inline(Javascript),
 }
 
 pub struct Head {
     pub title: Option<Text>,
     pub styles: Vec<StyleSheet>,
-    pub scripts: Vec<Script>
+    pub scripts: Vec<Script>,
 }
 
 pub struct Html {
     pub lang: Value<'static>,
     pub head: Head,
-    pub body: Body
+    pub body: Body,
 }
 
 pub struct Document {
-    pub html: Html
+    pub html: Html,
 }
