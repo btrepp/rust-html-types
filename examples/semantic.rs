@@ -1,4 +1,4 @@
-use html_types::semantic::{Body, Document, Head, Html, Script};
+use html_types::semantic::{Body, Class, Document, Head, Html, Id, Script};
 use html_types::{attributes::Value, text::Text, url::Url};
 
 // This shows the semantic module of
@@ -24,8 +24,11 @@ fn main() {
     let body = Body {
         content,
         scripts: vec![],
-        id: None,
-        class: vec![],
+        id: Some(Id::create("my-id").unwrap()),
+        class: vec![
+            Class::create("test").unwrap(),
+            Class::create("body").unwrap(),
+        ],
     };
     let html = Html {
         head,

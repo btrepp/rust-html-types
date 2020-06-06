@@ -148,9 +148,67 @@ where
         self.attributes.insert(key, None);
     }
 
+    /// Tests whether the attribute exists. Note this returns true
+    /// for bool attributes, and valued attributes
+    pub fn has_bool_attribute(&self, key: &Attribute<'a>) -> bool {
+        let attr = self.attributes.get(key);
+        let result = attr.is_some();
+        result
+    }
+
+    /// Tests whether the attribute exists. Note this returns false
+    /// for bool attributes, and true for valued attributes
+    pub fn has_attribute(&self, key: &Attribute<'a>) -> bool {
+        let attr = self.attributes.get(key);
+        let result = attr.map(|x| x.is_some()).unwrap_or(false);
+        result
+    }
+
     /// Sets the attribute to the supplied value
     /// Note: sugar over wrapping the value with some.
     pub fn set_attribute(&mut self, key: Attribute<'a>, value: Value<'a>) {
         self.attributes.insert(key, Some(value));
+    }
+
+    /// Returns the value of the supplied key
+    /// note for bool attributes, this will still be none
+    pub fn get_attribute_value(&self, key: &Attribute<'a>) -> &Option<Value<'a>> {
+        match self.attributes.get(key) {
+            None => &None,
+            Some(value) => value,
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::attributes::Attribute;
+
+    #[test]
+    fn has_attribute_bool() {
+        let mut el = Element::<()>::create(Tag::BODY);
+        el.attributes.insert(Attribute::ID, None);
+        let result = el.has_bool_attribute(&Attribute::ID);
+        assert!(result);
+    }
+
+    #[test]
+    fn has_attribute() {
+        let value = Value::STYLESHEET;
+        let mut el = Element::<()>::create(Tag::BODY);
+        el.attributes.insert(Attribute::ID, Some(value));
+        let result = el.has_attribute(&Attribute::ID);
+        assert!(result);
+    }
+
+    #[test]
+    fn get_attribute_value() {
+        let value = Value::STYLESHEET;
+        let mut el = Element::<()>::create(Tag::BODY);
+        el.attributes.insert(Attribute::ID, Some(value));
+        let result = el.get_attribute_value(&Attribute::ID);
+        let expected = &Some(Value::STYLESHEET);
+        assert_eq!(result, expected);
     }
 }

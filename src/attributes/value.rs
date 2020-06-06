@@ -14,19 +14,35 @@ macro_rules! value {
 }
 
 impl<'a> Value<'a> {
+    /// Function that determines whether a string slice would be
+    /// considered a valid value. Can be helpful elsewhere when specifing
+    /// more restrictive types
+    pub fn is_valid(str: &str) -> bool {
+        let allowed = |c: char| -> bool {
+            char::is_alphabetic(c)
+                || c == ':'
+                || c == '/'
+                || c == '.'
+                || char::is_whitespace(c)
+                || c == '-'
+        };
+        str.chars().all(allowed)
+    }
+
     pub fn create(str: &'a str) -> Result<Value<'a>, InvalidValueError> {
-        let allowed =
-            |c: char| -> bool { char::is_alphabetic(c) || c == ':' || c == '/' || c == '.' };
-        match str.chars().all(allowed) {
+        match Self::is_valid(str) {
             true => Ok(Value(Cow::Borrowed(str))),
             false => Err(InvalidValueError {}),
         }
     }
 
-    pub fn owned(str: String) -> Result<Value<'a>, InvalidValueError> {
-        let allowed =
-            |c: char| -> bool { char::is_alphabetic(c) || c == ':' || c == '/' || c == '.' };
-        match str.chars().all(allowed) {
+    pub fn owned<S>(str: S) -> Result<Value<'a>, InvalidValueError>
+    where
+        S: Into<String>,
+    {
+        let str = str.into();
+        let valid = Self::is_valid(&str);
+        match valid {
             true => Ok(Value(Cow::Owned(str))),
             false => Err(InvalidValueError {}),
         }
@@ -50,6 +66,14 @@ mod tests {
         let url = "http://google.com";
         let node = Value::create(url);
         let expected = Result::Ok(Value(Cow::Borrowed(url)));
+        assert_eq!(node, expected);
+    }
+
+    #[test]
+    fn namespacing_is_valid() {
+        let id = "test-id";
+        let node = Value::create(id);
+        let expected = Result::Ok(Value(Cow::Borrowed(id)));
         assert_eq!(node, expected);
     }
 }

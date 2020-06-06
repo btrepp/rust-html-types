@@ -24,11 +24,35 @@ See tests for usage examples
 Also note that rendering uses the public interfaces entirely, so the tree can be rendered
 to other data types if necessary, though a string rendering module is included.
 
-# TODO
+# Node/Elements
 
-1. ~~Currently tags need more types fleshed out (eg the compile time constants)~~
-2. Pretty printing string rendering
-3. Semantic HTML models, eg another tree saying ol must only have li elements etc.
-   Which would lead to not just the correct shape, but the correct intent
+Node and Elements are general purpose, and mostly complete now. You should be
+able to cover most HTML generation purposes using these, though they expect you to understand
+the rules of how to properly order it.
+
+# Semantic Module
+
+This semantic module is still in development, but the examples show it's motivation.
+Semantic elements have rules around there construction, and have attributes/children that make 
+sense. 
+
+There is still a large amount of work to do in this module, expanding it out.
+
+This module will probably never cover 'all' use cases of html, eg strange tags/combinations
+people may use, but the aim is to cover must as possible.
+
+Note: These items are always convertible to elements
+      It would be possible to convert back (with failures). Though this would be along way
+      From being implemented.
+
+# Pretty Printing
+
+While this is optional, I currently don't plan on implementing it. This would be a good candidate 
+for a Pull request.
+
+# Testing
+
+As everything is rust datastructures, it is easy to write tests. Ideally this will evolve
+into a html library with extensive testing
 
 
