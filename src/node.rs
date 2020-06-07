@@ -23,7 +23,7 @@ pub type Attributes<'a> = HashMap<Attribute<'a>, Option<attributes::Value<'a>>>;
 /// Describes all potential shapes of a html element
 /// Note that there are only three kinds, text nodes, comment nodes, and element nodes
 /// but an element node can be void, or have children
-#[derive(Clone, From)]
+#[derive(Clone, From,Debug,PartialEq, Eq)]
 pub enum Node<'a> {
     Text(Text),
     Comment(Comment),
@@ -32,13 +32,13 @@ pub enum Node<'a> {
 }
 
 /// A Html comment node. <!---- Text --->
-#[derive(From, Into, Clone)]
+#[derive(From, Into, Clone, Debug,PartialEq, Eq)]
 pub struct Comment(String);
 
 /// The html element type. This is the most common
 /// Note: if children is None, then it is handled as an empty
 /// element, this is different than having no children
-#[derive(Clone)]
+#[derive(Clone,Debug,PartialEq,Eq)]
 pub struct Element<'a, T>
 where
     T: ElementType,
