@@ -1,7 +1,7 @@
 use derive_more::Into;
 /// A html tag definition. Most of the time you will want the static constants
 /// defined on Tag, rather than constructing this yourself
-#[derive(Into, Clone, Eq, PartialEq)]
+#[derive(Into, Clone, Eq, PartialEq,Debug)]
 pub struct Tag<'a>(&'a str);
 
 /// Returned when the tag didn't contain valid characters

@@ -122,6 +122,7 @@ impl<'a> Element<'a, Vec<Node<'a>>> {
     pub fn main() -> Self {
         Element::<Vec<Node>>::create(Tag::MAIN)
     }
+
 }
 
 impl<'a, T> Element<'a, T>
