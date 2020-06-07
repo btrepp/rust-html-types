@@ -9,6 +9,7 @@ mod script;
 mod stylesheet;
 mod h1;
 mod phrasing;
+mod flow;
 
 pub use body::*;
 pub use class::*;
@@ -20,3 +21,4 @@ pub use script::*;
 pub use stylesheet::*;
 pub use h1::*;
 pub use phrasing::*;
+pub use flow::*;

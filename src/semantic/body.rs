@@ -1,42 +1,21 @@
 use super::{
     class::{Class, EmptyVector},
     id::Id,
-    main::Main,
-    Script,
+    Script, FlowContent,
 };
 use crate::{
     attributes::{Attribute, Value},
-    node::{Element, Node},
-    text::Text,
+    node::{Element, Node}
 };
 use std::convert::TryInto;
 
 pub struct Body {
-    pub content: Vec<BodyElement>,
+    pub content: Vec<FlowContent>,
     pub scripts: Vec<Script>,
     pub id: Option<Id>,
     pub class: Vec<Class>,
 }
 
-pub enum BodyElement {
-    Text(Text),
-    Main(Main),
-}
-
-impl<'a> From<BodyElement> for Node<'a> {
-    fn from(value: BodyElement) -> Self {
-        match value {
-            BodyElement::Text(text) => text.into(),
-            BodyElement::Main(main) => main.into(),
-        }
-    }
-}
-
-impl<'a> From<Text> for BodyElement {
-    fn from(value: Text) -> Self {
-        BodyElement::Text(value)
-    }
-}
 
 impl<'a> From<Body> for Element<'a, Vec<Node<'a>>> {
     fn from(value: Body) -> Self {
