@@ -19,8 +19,9 @@ impl<'a> From<Html> for Element<'a, Vec<Node<'a>>> {
 }
 
 impl<'a> From<Html> for Node<'a> {
-    fn from(html: Html) -> Self {
-        let el: Element<Vec<Node<'a>>> = html.into();
+    fn from(v: Html) -> Self {
+        let el :Element<Vec<Node<'a>>> = v.into();
         el.into()
     }
+
 }

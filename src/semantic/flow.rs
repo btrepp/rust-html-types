@@ -1,8 +1,4 @@
-
-
-use crate::{node::Node, text::Text};
-use super::main::Main;
-
+use crate:: text::Text;
 /// Elements belonging to the flow content category typically contain text or embedded content. 
 ///
 /// https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories#Flow_content
@@ -10,7 +6,6 @@ pub enum FlowContent {
     Text(Text),
     Main(Main)
 }
-
 
 impl From<Text> for FlowContent {
     fn from(v: Text) -> Self {
@@ -26,3 +21,6 @@ impl<'a> From<FlowContent> for Node<'a> {
         }
     }
 }
+
+elem!(Main MAIN FlowContent);
+

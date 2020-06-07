@@ -23,7 +23,7 @@ pub type Attributes<'a> = HashMap<Attribute<'a>, Option<attributes::Value<'a>>>;
 /// Describes all potential shapes of a html element
 /// Note that there are only three kinds, text nodes, comment nodes, and element nodes
 /// but an element node can be void, or have children
-#[derive(Clone, From,Debug,PartialEq, Eq)]
+#[derive(Clone, From, Debug,PartialEq, Eq)]
 pub enum Node<'a> {
     Text(Text),
     Comment(Comment),
@@ -47,6 +47,7 @@ where
     pub attributes: Attributes<'a>,
     pub children: T,
 }
+
 
 /// Represents the different element types.
 /// Note: This is sealed so cannot be implemented other this crate
